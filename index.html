@@ -29,14 +29,19 @@ require_once ('/your/path/to/applepay_includes/apple_pay_conf.php');
 <button type="button" id="applePay"></button>
 <p style="display:none" id="got_notactive">ApplePay is possible on this browser, but not currently activated.</p>
 <p style="display:none" id="notgot">ApplePay is not available on this browser</p>
-<p style="display:none" id="success">Test transaction completed, thanks. <a href="<?=$_SERVER["SCRIPT_URL"]?>">reset</a></p>
+<p style="display:none" id="success">Test transaction completed, thanks.</p>
 </div>
 <script type="text/javascript">
 
-var debug = <?=DEBUG?>;
-
+var debug = true,
+    productionMerchantidentifier = 'merchant.test.payment.online',
+    productionDisplayname = 'https://git579.github.io',
+    productionCurrencycode = 'RUB',
+    productionCountrycode = 'RU';
+    
+    
 if (window.ApplePaySession) {
-   var merchantIdentifier = '<?=PRODUCTION_MERCHANTIDENTIFIER?>';
+   var merchantIdentifier = productionMerchantidentifier;
    var promise = ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier);
    promise.then(function (canMakePayments) {
 	  if (canMakePayments) {
@@ -100,14 +105,14 @@ document.getElementById("applePay").onclick = function(evt) {
 	 }
 
 	 var paymentRequest = {
-	   currencyCode: '<?=PRODUCTION_CURRENCYCODE?>',
-	   countryCode: '<?=PRODUCTION_COUNTRYCODE?>',
+	   currencyCode: productionCurrencycode,
+	   countryCode: productionCountrycode,
 	   requiredShippingContactFields: ['postalAddress'],
 	   //requiredShippingContactFields: ['postalAddress','email', 'name', 'phone'],
 	   //requiredBillingContactFields: ['postalAddress','email', 'name', 'phone'],
 	   lineItems: [{label: subTotalDescr, amount: runningAmount }, {label: 'P&P', amount: runningPP }],
 	   total: {
-		  label: '<?=PRODUCTION_DISPLAYNAME?>',
+		  label: productionDisplayname,
 		  amount: runningTotal()
 	   },
 	   supportedNetworks: ['amex', 'masterCard', 'visa' ],
@@ -149,7 +154,7 @@ document.getElementById("applePay").onclick = function(evt) {
 		
 		var status = ApplePaySession.STATUS_SUCCESS;
 		var newShippingMethods = shippingOption;
-		var newTotal = { type: 'final', label: '<?=PRODUCTION_DISPLAYNAME?>', amount: runningTotal() };
+		var newTotal = { type: 'final', label: productionDisplayname, amount: runningTotal() };
 		var newLineItems =[{type: 'final',label: subTotalDescr, amount: runningAmount }, {type: 'final',label: 'P&P', amount: runningPP }];
 		
 		session.completeShippingContactSelection(status, newShippingMethods, newTotal, newLineItems );
@@ -164,7 +169,7 @@ document.getElementById("applePay").onclick = function(evt) {
 		getShippingCosts( event.shippingMethod.identifier, true );
 		
 		var status = ApplePaySession.STATUS_SUCCESS;
-		var newTotal = { type: 'final', label: '<?=PRODUCTION_DISPLAYNAME?>', amount: runningTotal() };
+		var newTotal = { type: 'final', label: productionDisplayname, amount: runningTotal() };
 		var newLineItems =[{type: 'final',label: subTotalDescr, amount: runningAmount }, {type: 'final',label: 'P&P', amount: runningPP }];
 		
 		session.completeShippingMethodSelection(status, newTotal, newLineItems );
@@ -176,7 +181,7 @@ document.getElementById("applePay").onclick = function(evt) {
 		logit('starting session.onpaymentmethodselected');
 		logit(event);
 		
-		var newTotal = { type: 'final', label: '<?=PRODUCTION_DISPLAYNAME?>', amount: runningTotal() };
+		var newTotal = { type: 'final', label: productionDisplayname, amount: runningTotal() };
 		var newLineItems =[{type: 'final',label: subTotalDescr, amount: runningAmount }, {type: 'final',label: 'P&P', amount: runningPP }];
 		
 		session.completePaymentMethodSelection( newTotal, newLineItems );
