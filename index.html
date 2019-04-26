@@ -59,7 +59,7 @@ if (window.ApplePaySession) {
 
 document.getElementById("applePay").onclick = function(evt) {
 
-	 var runningAmount 	= 42;
+	 var runningAmount 	= 2;
 	 var runningPP		= 0; getShippingCosts('domestic_std', true);
 	 var runningTotal	= function() { return runningAmount + runningPP; }
 	 var shippingOption = "";
@@ -68,7 +68,7 @@ document.getElementById("applePay").onclick = function(evt) {
 	 
 	 function getShippingOptions(shippingCountry){
 	 logit('getShippingOptions: ' + shippingCountry );
-		if( shippingCountry.toUpperCase() == "<?=PRODUCTION_COUNTRYCODE?>" ) {
+		if(shippingCountry.toUpperCase() == 'productionCountrycode') {
 			shippingOption = [{label: 'Standard Shipping', amount: getShippingCosts('domestic_std', true), detail: '3-5 days', identifier: 'domestic_std'},{label: 'Expedited Shipping', amount: getShippingCosts('domestic_exp', false), detail: '1-3 days', identifier: 'domestic_exp'}];
 		} else {
 			shippingOption = [{label: 'International Shipping', amount: getShippingCosts('international', true), detail: '5-10 days', identifier: 'international'}];
@@ -237,7 +237,7 @@ document.getElementById("applePay").onclick = function(evt) {
 function logit( data ){
 	
 	if( debug == true ){
-		console.log(data);
+		alert(data);
 	}	
 
 };
